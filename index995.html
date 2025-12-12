@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>東京聖誕跨年之旅 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #EBF5FB;
+            -webkit-tap-highlight-color: transparent;
+            color: #334155;
+        }
+
+        /* 隱藏捲軸 */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Banner 圓弧設計 */
+        .header-curve {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background-color: #EBF5FB;
+            border-top-left-radius: 40px;
+            border-top-right-radius: 40px;
+            z-index: 10;
+        }
+
+        /* Tab 按鈕浮動效果 */
+        .floating-tabs {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            z-index: 20;
+            display: flex;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            color: #1E3A8A; /* 深藍色 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            border: 2px solid transparent;
+        }
+
+        .tab-btn.active {
+            background: #1E3A8A;
+            color: #FFF;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(30, 58, 138, 0.3);
+        }
+
+        /* 卡片樣式 */
+        .card-shadow {
+            box-shadow: 0 4px 20px rgba(179, 229, 252, 0.2);
+        }
+        
+        /* 購物清單Checkbox樣式優化 */
+        .custom-checkbox {
+            appearance: none;
+            background-color: #fff;
+            margin: 0;
+            font: inherit;
+            color: currentColor;
+            width: 1.25em;
+            height: 1.25em;
+            border: 2px solid #CBD5E1;
+            border-radius: 0.35em;
+            display: grid;
+            place-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .custom-checkbox::before {
+            content: "";
+            width: 0.65em;
+            height: 0.65em;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em white;
+            transform-origin: center;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+
+        .custom-checkbox:checked {
+            background-color: #1E3A8A;
+            border-color: #1E3A8A;
+        }
+
+        .custom-checkbox:checked::before {
+            transform: scale(1);
+        }
+
+        /* 動畫 */
+        .fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
+        .fade-enter-from, .fade-leave-to { opacity: 0; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'tokyo-blue': '#1E3A8A',
+                        'snow-white': '#F8FAFC',
+                        'accent-gold': '#F59E0B',
+                        'ice-blue': '#E0F2FE',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+
+<div id="app" class="max-w-[480px] mx-auto min-h-screen bg-ice-blue/30 relative pb-24 bg-[#EBF5FB]">
+
+    <header class="relative h-[250px] w-full overflow-hidden shadow-lg z-0">
+        <img src="Image.jpg" alt="Tokyo Holiday" class="w-full h-full object-cover">
+		<div class="absolute top-6 right-0 p-4 text-white text-right">
+			<h1 class="text-2xl font-bold drop-shadow-lg pr-0">東京聖誕跨年之旅</h1>
+			<p class="text-sm drop-shadow-md pr-4">2025/12/24 - 2026/01/03</p>
+		</div>
+        <div class="header-curve"></div>
+        <div class="floating-tabs">
+            <button @click="currentTab = 'itinerary'" :class="{'active': currentTab === 'itinerary'}" class="tab-btn">
+                <i class="fa-solid fa-map-location-dot"></i>
+            </button>
+            <button @click="currentTab = 'info'" :class="{'active': currentTab === 'info'}" class="tab-btn">
+                <i class="fa-solid fa-circle-info"></i>
+            </button>
+            <button @click="currentTab = 'shopping'" :class="{'active': currentTab === 'shopping'}" class="tab-btn">
+                <i class="fa-solid fa-basket-shopping"></i>
+            </button>
+            <button @click="currentTab = 'expenses'" :class="{'active': currentTab === 'expenses'}" class="tab-btn">
+                <i class="fa-solid fa-coins"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="relative z-10 px-4 -mt-2">
+
+        <div v-if="currentTab === 'itinerary'" class="animate-fade-in">
+            <div class="flex overflow-x-auto hide-scrollbar space-x-3 py-2 mb-4 snap-x">
+                <div v-for="(day, index) in dates" :key="index"
+                     @click="selectedDateIndex = index"
+                     class="snap-center flex-shrink-0 w-[60px] h-[75px] rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-all duration-300 border-2"
+                     :class="selectedDateIndex === index ? 'bg-tokyo-blue text-white border-tokyo-blue shadow-lg scale-105' : 'bg-white text-slate-400 border-white'">
+                    <span class="text-xs font-bold uppercase tracking-wider">{{ day.weekday }}</span>
+                    <span class="text-xl font-bold">{{ day.date.split('/')[1] }}</span>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-blue-400 to-blue-300 rounded-3xl p-4 text-white shadow-lg mb-6 flex justify-between items-center relative overflow-hidden">
+                <div class="relative z-10">
+                    <div class="flex items-center space-x-3">
+                        <i :class="weatherData.icon" class="text-4xl"></i>
+                        <div>
+                            <div class="text-3xl font-bold">{{ weatherData.temp }}°</div>
+                            <div class="text-xs opacity-90">體感 {{ weatherData.feel }}°</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right relative z-10">
+                    <div class="font-bold text-sm">東京</div>
+                    <div class="text-xs opacity-80">{{ dates[selectedDateIndex].date }}</div>
+                </div>
+                <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-white opacity-20 rounded-full blur-xl"></div>
+            </div>
+
+            <div class="space-y-0 relative pb-20">
+                <div v-if="currentItinerary.length === 0" class="text-center py-10 text-slate-400">
+                    <i class="fa-solid fa-mug-hot text-4xl mb-2"></i>
+                    <p>本日尚無行程</p>
+                </div>
+
+                <div v-for="(item, idx) in currentItinerary" :key="item.id" class="relative group pb-6">
+                    <div v-if="idx > 0" class="absolute left-[24px] -top-3 w-0.5 h-6 bg-slate-300 z-0"></div>
+                    <div v-if="idx > 0" class="flex items-center pl-10 text-xs text-slate-500 mb-2 relative z-10">
+                        <i :class="getTransportIcon(item.transportType)" class="mr-1"></i>
+                        <span>約 {{ item.travelTime || '15 min' }}</span>
+                    </div>
+                    <div v-if="idx === 0" class="flex items-center pl-10 text-xs text-slate-500 mb-2">
+                        <i class="fa-solid fa-hotel mr-1"></i>
+                        <span>從飯店出發</span>
+                    </div>
+
+                    <div class="flex relative">
+                        <div class="flex flex-col items-center mr-3 min-w-[50px]">
+                            <div class="w-12 h-12 rounded-full flex items-center justify-center text-white shadow-md z-10 border-4 border-[#EBF5FB]" :class="getCategoryColor(item.category)">
+                                <i :class="getCategoryIcon(item.category)"></i>
+                            </div>
+                            <div v-if="idx < currentItinerary.length - 1" class="w-0.5 h-full bg-slate-200 absolute top-12 left-[23px] -z-0"></div>
+                        </div>
+
+                        <div class="flex-1 bg-white rounded-2xl p-4 card-shadow border border-slate-100 relative overflow-hidden group">
+                            <div v-if="item.category === 'flight'" class="bg-blue-50 -m-4 p-4 mb-0">
+                                <div class="flex justify-between items-center text-tokyo-blue">
+                                    <h3 class="font-bold text-lg"><i class="fa-solid fa-plane-up mr-2"></i>{{ item.name }}</h3>
+                                </div>
+                                <div class="mt-2 text-sm text-slate-600">{{ item.note }}</div>
+                            </div>
+                            <div v-else>
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-bold text-slate-800 text-lg leading-tight mb-1">{{ item.name }}</h3>
+                                        <div class="flex items-center text-xs text-slate-500 font-bold mb-2">
+                                            <span class="bg-slate-100 px-2 py-0.5 rounded mr-2" v-if="item.startTime">{{ item.startTime }}</span>
+                                            <span v-if="item.price" class="text-accent-gold"><i class="fa-solid fa-ticket mr-1"></i>{{ item.price }}</span>
+                                        </div>
+                                    </div>
+                                    <button @click.stop="openMap(item.name)" class="w-8 h-8 rounded-full bg-blue-50 text-tokyo-blue flex items-center justify-center hover:bg-tokyo-blue hover:text-white transition-colors">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                    </button>
+                                </div>
+                                <div class="text-sm text-slate-500 space-y-1">
+                                    <p v-if="item.hours"><i class="fa-regular fa-clock w-4 mr-1"></i> {{ item.hours }}</p>
+                                    <p v-if="item.note" class="mt-2 text-xs bg-yellow-50 text-slate-600 p-2 rounded border border-yellow-100">
+                                        <i class="fa-solid fa-quote-left text-yellow-400 mr-1"></i> {{ item.note }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end mt-3 pt-2 border-t border-slate-100 space-x-2">
+                                <button @click="moveItem(idx, -1)" v-if="idx > 0" class="text-xs bg-slate-100 p-1.5 rounded text-slate-500"><i class="fa-solid fa-arrow-up"></i></button>
+                                <button @click="moveItem(idx, 1)" v-if="idx < currentItinerary.length - 1" class="text-xs bg-slate-100 p-1.5 rounded text-slate-500"><i class="fa-solid fa-arrow-down"></i></button>
+                                <button @click="editItem(item)" class="text-xs bg-slate-100 px-3 py-1.5 rounded text-slate-600 font-bold hover:bg-slate-200">編輯</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button @click="openAddModal" class="fixed bottom-6 right-6 w-14 h-14 bg-tokyo-blue text-white rounded-full shadow-xl flex items-center justify-center text-2xl z-50 hover:scale-110 transition-transform">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </div>
+
+        <div v-if="currentTab === 'info'" class="space-y-5 pb-20 animate-fade-in">
+            <div class="bg-white rounded-3xl p-5 card-shadow">
+                <h3 class="font-bold text-tokyo-blue mb-3 border-b pb-2"><i class="fa-solid fa-calculator mr-2"></i>匯率換算 (0.20)</h3>
+                <div class="flex items-center space-x-3">
+                    <div class="flex-1">
+                        <label class="text-xs text-slate-400">JPY</label>
+                        <input type="number" v-model="currencyInput" @input="calculateCurrency" class="w-full bg-slate-50 rounded-xl p-2 font-bold text-lg border border-slate-200">
+                    </div>
+                    <i class="fa-solid fa-arrow-right-arrow-left text-slate-300 mt-4"></i>
+                    <div class="flex-1">
+                        <label class="text-xs text-slate-400">TWD</label>
+                        <div class="w-full bg-blue-50 text-tokyo-blue rounded-xl p-2 font-bold text-lg border border-blue-100 text-right">$ {{ currencyResult }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl p-5 card-shadow">
+                <h3 class="font-bold text-tokyo-blue mb-3 border-b pb-2"><i class="fa-solid fa-plane mr-2"></i>航班資訊</h3>
+                <div class="mb-4 relative pl-4 border-l-2 border-slate-200">
+                    <div class="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-blue-500"></div>
+                    <div class="flex justify-between text-sm font-bold"><span>去程 12/24</span><span class="text-blue-600">CI0100</span></div>
+                    <div class="mt-1 bg-slate-50 p-3 rounded-lg text-sm">
+                        <div class="flex justify-between items-center">
+                            <div><div class="text-2xl font-bold">09:30</div><div class="text-xs text-slate-500">TPE 桃園</div></div>
+                            <i class="fa-solid fa-plane text-slate-300 transform rotate-45"></i>
+                            <div class="text-right"><div class="text-2xl font-bold">13:30</div><div class="text-xs text-slate-500">NRT 成田</div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative pl-4 border-l-2 border-slate-200">
+                    <div class="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-accent-gold"></div>
+                    <div class="flex justify-between text-sm font-bold"><span>回程 01/03</span><span class="text-blue-600">CI0101</span></div>
+                    <div class="mt-1 bg-slate-50 p-3 rounded-lg text-sm">
+                        <div class="flex justify-between items-center">
+                            <div><div class="text-2xl font-bold">14:35</div><div class="text-xs text-slate-500">NRT 成田</div></div>
+                            <i class="fa-solid fa-plane text-slate-300 transform rotate-45"></i>
+                            <div class="text-right"><div class="text-2xl font-bold">17:45</div><div class="text-xs text-slate-500">TPE 桃園</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-3xl p-5 card-shadow">
+                <h3 class="font-bold text-tokyo-blue mb-3 border-b pb-2"><i class="fa-solid fa-bed mr-2"></i>住宿資訊</h3>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h4 class="font-bold text-lg">相鐵FRESA INN 東京錦糸町</h4>
+                        <p class="text-xs text-slate-500 mt-1">Sotetsu Fresa Inn Tokyo-Kinshicho</p>
+                        <p class="text-sm mt-2"><i class="fa-solid fa-map-pin w-4 text-center mr-1 text-slate-400"></i> 2 Chome-18-7 Kotobashi</p>
+                    </div>
+                    <button @click="openMap('Sotetsu Fresa Inn Tokyo-Kinshicho')" class="w-10 h-10 bg-blue-100 rounded-full text-blue-600 flex items-center justify-center shadow-sm">
+                        <i class="fa-solid fa-location-arrow"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <a href="tel:110" class="bg-red-50 border border-red-100 p-4 rounded-2xl flex flex-col items-center justify-center text-red-600 font-bold shadow-sm"><i class="fa-solid fa-user-shield text-2xl mb-2"></i>警察 110</a>
+                <a href="tel:119" class="bg-red-50 border border-red-100 p-4 rounded-2xl flex flex-col items-center justify-center text-red-600 font-bold shadow-sm"><i class="fa-solid fa-truck-medical text-2xl mb-2"></i>救護 119</a>
+             </div>
+        </div>
+
+        <div v-if="currentTab === 'shopping'" class="pb-20 animate-fade-in">
+            <h3 class="font-bold text-tokyo-blue text-lg mb-4 flex items-center">
+                <i class="fa-solid fa-bag-shopping mr-2"></i>購物清單 ({{ unpurchasedCount }} 項未購)
+            </h3>
+            
+            <div class="space-y-4">
+                <div v-if="shoppingList.length === 0" class="text-center py-10 text-slate-400">
+                    <i class="fa-solid fa-clipboard-list text-4xl mb-2"></i>
+                    <p>目前沒有購物清單</p>
+                </div>
+
+                <div v-for="(item, idx) in shoppingList" :key="idx" 
+                     class="bg-white rounded-2xl p-4 card-shadow flex items-start transition-all duration-300"
+                     :class="{'opacity-60 bg-slate-50': item.checked}">
+                    
+                    <div class="pt-1 mr-4">
+                        <input type="checkbox" v-model="item.checked" class="custom-checkbox cursor-pointer">
+                    </div>
+
+                    <div class="flex-1 cursor-pointer" @click="item.checked = !item.checked">
+                        <p class="font-bold text-slate-800 text-base leading-tight mb-1" :class="{'line-through text-slate-500': item.checked}">
+                            {{ item.name }}
+                        </p>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            {{ item.note }}
+                        </p>
+                    </div>
+
+                    <button @click.stop="removeShoppingItem(idx)" class="text-slate-300 hover:text-red-400 ml-2 p-2 transition-colors">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button @click="showShoppingModal = true" class="fixed bottom-6 right-6 w-14 h-14 bg-tokyo-blue text-white rounded-full shadow-xl flex items-center justify-center text-2xl z-50 hover:scale-110 transition-transform">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </div>
+
+        <div v-if="currentTab === 'expenses'" class="pb-20 animate-fade-in">
+            <div class="bg-gradient-to-r from-tokyo-blue to-blue-700 rounded-3xl p-6 text-white shadow-xl mb-6 relative overflow-hidden">
+                <div class="relative z-10 text-center">
+                    <p class="text-sm opacity-80 mb-1">目前總花費 (JPY)</p>
+                    <h2 class="text-5xl font-bold tracking-tight">¥ {{ formatNumber(totalExpenses) }}</h2>
+                </div>
+                <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+            </div>
+            <div class="bg-white rounded-3xl p-5 card-shadow min-h-[300px]">
+                <h3 class="font-bold text-slate-700 mb-4 flex items-center"><i class="fa-solid fa-list-ul mr-2"></i>支出紀錄</h3>
+                <div class="space-y-4">
+                    <div v-for="(exp, idx) in expenses" :key="idx" class="flex items-center justify-between border-b border-slate-50 pb-3 last:border-0">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-xs mr-3 shadow-sm" :class="getCategoryColor(exp.category)">{{ exp.category.substring(0,1) }}</div>
+                            <div>
+                                <p class="font-bold text-slate-800 text-sm">{{ exp.name }}</p>
+                                <p class="text-xs text-slate-400">{{ exp.date }} · {{ exp.payment }}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-tokyo-blue">¥{{ formatNumber(exp.amount) }}</p>
+                             <button @click="removeExpense(idx)" class="text-xs text-red-300 mt-1 block w-full text-right"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button @click="showExpenseModal = true" class="fixed bottom-6 right-6 w-14 h-14 bg-tokyo-blue text-white rounded-full shadow-xl flex items-center justify-center text-2xl z-50 hover:scale-110 transition-transform"><i class="fa-solid fa-plus"></i></button>
+        </div>
+    </main>
+
+    <div v-if="showItineraryModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl w-full max-w-sm p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <h3 class="font-bold text-xl mb-4 text-center text-tokyo-blue">{{ isEditMode ? '編輯行程' : '新增行程' }}</h3>
+            <div class="space-y-3">
+                <select v-model="formItinerary.category" class="w-full bg-slate-50 rounded-xl p-3 border-none outline-none text-sm">
+                    <option value="sightseeing">景點</option>
+                    <option value="food">美食</option>
+                    <option value="shopping">購物</option>
+                    <option value="accommodation">住宿</option>
+                    <option value="transport">交通</option>
+                    <option value="flight">航班</option>
+                    <option value="other">其他</option>
+                </select>
+                <input v-model="formItinerary.name" placeholder="行程名稱" class="w-full bg-slate-50 rounded-xl p-3 border-none outline-none text-sm">
+                <div class="flex space-x-2">
+                     <input v-model="formItinerary.startTime" placeholder="時間 (例如 15:00)" class="flex-1 bg-slate-50 rounded-xl p-3 border-none outline-none text-sm">
+                     <input v-model="formItinerary.hours" placeholder="營業時間" class="flex-1 bg-slate-50 rounded-xl p-3 border-none outline-none text-sm">
+                </div>
+                <input v-model="formItinerary.price" placeholder="門票/費用" class="w-full bg-slate-50 rounded-xl p-3 border-none outline-none text-sm">
+                <div class="text-xs text-slate-500 font-bold ml-1 mt-2">交通方式 (距下一站)</div>
+                <div class="flex space-x-2">
+                    <select v-model="formItinerary.transportType" class="flex-1 bg-slate-50 rounded-xl p-3 border-none outline-none text-sm">
+                        <option value="walk">步行</option>
+                        <option value="car">開車</option>
+                        <option value="public">大眾運輸</option>
+                    </select>
+                    <input v-model="formItinerary.travelTime" placeholder="預估時間 (例如 15 min)" class="flex-1 bg-slate-50 rounded-xl p-3 border-none outline-none text-sm">
+                </div>
+                <textarea v-model="formItinerary.note" placeholder="備註 / 特色" rows="3" class="w-full bg-slate-50 rounded-xl p-3 border-none outline-none text-sm"></textarea>
+            </div>
+            <div class="flex space-x-3 mt-6">
+                <button @click="showItineraryModal = false" class="flex-1 py-3 bg-slate-100 text-slate-500 rounded-xl font-bold text-sm">取消</button>
+                <button v-if="isEditMode" @click="deleteItineraryItem" class="w-12 bg-red-100 text-red-500 rounded-xl flex items-center justify-center"><i class="fa-solid fa-trash-can"></i></button>
+                <button @click="saveItinerary" class="flex-1 py-3 bg-tokyo-blue text-white rounded-xl font-bold text-sm shadow-lg shadow-blue-900/20">確認</button>
+            </div>
+        </div>
+    </div>
+
+    <div v-if="showShoppingModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl w-full max-w-sm p-6 shadow-2xl">
+            <h3 class="font-bold text-xl mb-4 text-center text-tokyo-blue">新增購物項目</h3>
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">商品名稱</label>
+                    <input v-model="newShoppingItem.name" type="text" placeholder="例如：AFURI 拉麵" class="w-full bg-slate-50 rounded-xl p-3 outline-none border border-slate-200 focus:border-tokyo-blue">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">備註/地點</label>
+                    <textarea v-model="newShoppingItem.note" rows="3" placeholder="例如：必點叉燒飯、神田神社..." class="w-full bg-slate-50 rounded-xl p-3 outline-none border border-slate-200 focus:border-tokyo-blue resize-none"></textarea>
+                </div>
+            </div>
+            <div class="flex space-x-3">
+                <button @click="showShoppingModal = false" class="flex-1 py-3 bg-slate-100 text-slate-500 rounded-xl font-bold text-sm">取消</button>
+                <button @click="addShoppingItem" class="flex-1 py-3 bg-tokyo-blue text-white rounded-xl font-bold text-sm shadow-lg">新增</button>
+            </div>
+        </div>
+    </div>
+
+    <div v-if="showExpenseModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl w-full max-w-sm p-6 shadow-2xl">
+            <h3 class="font-bold text-xl mb-4 text-center text-tokyo-blue">記一筆</h3>
+            <div class="grid grid-cols-2 gap-3 mb-3">
+                <select v-model="newExpense.category" class="bg-slate-50 rounded-xl p-3 text-sm outline-none">
+                    <option value="food">飲食</option>
+                    <option value="shopping">購物</option>
+                    <option value="transport">交通</option>
+                    <option value="stay">住宿</option>
+                    <option value="ticket">門票</option>
+                    <option value="other">其他</option>
+                </select>
+                <select v-model="newExpense.payment" class="bg-slate-50 rounded-xl p-3 text-sm outline-none"><option value="現金">現金</option><option value="信用卡">信用卡</option></select>
+            </div>
+            <input v-model="newExpense.date" type="date" class="w-full bg-slate-50 rounded-xl p-3 mb-3 text-sm outline-none">
+            <input v-model="newExpense.name" placeholder="名稱" class="w-full bg-slate-50 rounded-xl p-3 mb-3 text-sm outline-none">
+            <div class="relative mb-6">
+                <span class="absolute left-3 top-3 text-slate-400 font-bold">¥</span>
+                <input v-model.number="newExpense.amount" type="number" placeholder="金額" class="w-full bg-slate-50 rounded-xl p-3 pl-8 font-bold text-lg outline-none">
+            </div>
+            <div class="flex space-x-3">
+                <button @click="showExpenseModal = false" class="flex-1 py-3 bg-slate-100 text-slate-500 rounded-xl font-bold text-sm">取消</button>
+                <button @click="addExpense" class="flex-1 py-3 bg-tokyo-blue text-white rounded-xl font-bold text-sm shadow-lg">儲存</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // 引入 watch 和 onMounted 
+    const { createApp, ref, computed, watch, onMounted } = Vue
+
+    createApp({
+        setup() {
+            const currentTab = ref('itinerary');
+            const dates = ref([
+                { date: '12/24', weekday: 'Wed' }, { date: '12/25', weekday: 'Thu' }, { date: '12/26', weekday: 'Fri' },
+                { date: '12/27', weekday: 'Sat' }, { date: '12/28', weekday: 'Sun' }, { date: '12/29', weekday: 'Mon' },
+                { date: '12/30', weekday: 'Tue' }, { date: '12/31', weekday: 'Wed' }, { date: '01/01', weekday: 'Thu' },
+                { date: '01/02', weekday: 'Fri' }, { date: '01/03', weekday: 'Sat' },
+            ]);
+            const selectedDateIndex = ref(0);
+            
+            // 預設行程資料
+            const defaultItinerary = {
+                0: [
+                    { id: 1, name: 'TPE 桃園機場', category: 'flight', startTime: '09:30', note: 'CI0100 -> NRT 13:30', transportType: 'flight', travelTime: '4h' },
+                    { id: 2, name: '相鐵FRESA INN 東京錦糸町', category: 'accommodation', startTime: '15:00', note: 'Check-in', transportType: 'public', travelTime: '1h' },
+                    { id: 3, name: '高木神社⛩️', category: 'sightseeing', startTime: '15:30', note: '結緣神社', transportType: 'walk', travelTime: '' },
+                    { id: 4, name: '志滿草餅', category: 'food', startTime: '16:30', note: '艾草點心', transportType: 'walk', travelTime: '' },
+					{ id: 5, name: '吉備子屋', category: 'shopping', startTime: '16:30', note: '桃鈴', transportType: 'walk', travelTime: '' },
+					{ id: 6, name: '京島南公園', category: 'sightseeing', startTime: '16:30', note: '', transportType: 'walk', travelTime: '' },
+                    { id: 7, name: '晴空塔 敘敘苑 (預約)', category: 'food', startTime: '19:00', note: '30F，備案:利久牛舌 6F、六厘舍30F，人太多可以吃 Tsuru TonTan 在十三樓 麵店', transportType: 'walk', travelTime: '' },
+					{ id: 8, name: '晴空塔', category: 'sightseeing', startTime: '21:00', note: '晴空塔聖誕市集4F戶外、寶可夢中心 4F、二樓伴手禮區 1/2500大小的晴空塔 吉拿棒', transportType: 'walk', travelTime: '' },
+                    { id: 9, name: '十間橋', category: 'sightseeing', startTime: '22:00', note: '拍攝晴空塔倒影', transportType: 'walk', travelTime: '' }
+                ],
+                1: [
+                    { id: 201, name: '上野之森櫻花觀景台📷', category: 'sightseeing', startTime: '', note: '上野公園、上野大佛、東照宮、不忍池辯天堂、花園稻荷神社⛩', transportType: 'public', travelTime: '' },
+                    { id: 202, name: '鴨to蔥 / 山家炸豬排', category: 'food', startTime: '12:00', note: '午餐', transportType: 'walk', travelTime: '' },
+                    { id: 203, name: 'Yamashiroya 玩具店', category: 'shopping', startTime: '13:30', note: '上野最大玩具店', transportType: 'walk', travelTime: '' },
+					{ id: 204, name: 'safn° サフン', category: 'food', startTime: '12:00', note: '抹茶affogato 布丁、經典布丁', transportType: 'walk', travelTime: '' },
+                    { id: 205, name: '谷中銀座商店街', category: 'sightseeing', startTime: '15:00', note: '限定甜點 蒙布朗、栗子冰淇淋蛋糕、和栗や(和栗や 唯一無二の和栗専門店)、日暮里夕陽階梯（日落 日劇取景點）', transportType: 'public', travelTime: '' },
+                    { id: 206, name: '代代木聖誕市集', category: 'sightseeing', startTime: '17:30', note: '聖誕氛圍', transportType: 'public', travelTime: '' },
+                    { id: 207, name: '六本木 入鹿ToKyo拉麵', category: 'food', startTime: '19:30', note: '三號出口出來，六本木十字路口　備案: 成瀨鰻魚飯（有中文菜單）、六本木站的ミートマン 蔬菜肉卷串', transportType: 'public', travelTime: '' },
+                    { id: 208, name: '六本木Hills 觀景台', category: 'sightseeing', startTime: '21:00', note: '160家店可以逛 52樓觀景台看夜景', transportType: 'walk', travelTime: '' },
+					{ id: 209, name: '六本木 Meat Man 居酒屋🏮', category: 'food', startTime: '22:00', note: '店員有台灣人', transportType: 'walk', travelTime: '' }
+                ],
+                2: [
+                    { id: 301, name: '前往鎌倉', category: 'transport', startTime: '09:00', note: 'JR 湘南新宿線 池袋、新宿、涉谷 （搭超過四站 西口買一日票券）不然西瓜卡可以直接上', transportType: 'public', travelTime: '1h' },
+                    { id: 302, name: '鶴岡八幡宮 & 小町通', category: 'sightseeing', startTime: '10:30', note: '牛兵衛壽司、Giraffa curry pan咖哩麵包、鎌倉武士堂（扭蛋）、開運大佛雞蛋糕、鮪お重 栄町 鐮倉小町店 鮪魚丼飯、Long track Foods 日系雜貨店 門口冰櫃有草莓香草冰淇淋、Re: Cha 溫馨小咖啡廳適合暴走一波休息', transportType: 'walk', travelTime: '' },
+                    { id: 303, name: '錢洗弁財天宇賀福神社⛩️', category: 'sightseeing', startTime: '13:00', note: '洗錢神社', transportType: 'walk', travelTime: '' },
+					{ id: 304, name: '鎌倉大佛', category: 'sightseeing', startTime: '15:00', note: '進去要門票，可以考慮跳過', transportType: 'public', travelTime: '' },
+					{ id: 305, name: '七里濱', category: 'food', startTime: '15:00', note: 'Bills鬆餅、EDW 咖哩飯', transportType: 'public', travelTime: '' },
+                    { id: 306, name: '鎌倉高校前', category: 'sightseeing', startTime: '15:00', note: '灌籃高手平交道', transportType: 'public', travelTime: '' },
+                    { id: 307, name: '江之島', category: 'sightseeing', startTime: '16:30', note: 'KAMOKOTO Kitchen 車站旁的日式定食（唐揚雞、茶泡飯）、紀の國屋本店 招牌菓子 比較推薦冰淇淋', transportType: 'walk', travelTime: '' }
+                ],
+                3: [
+                    { id: 401, name: '淺草今半', category: 'food', startTime: '10:30', note: '壽喜燒午間套餐排隊(11:30開門，建議10:30去排隊第一組)，備案： 淺草 雷門 櫻田 老奶奶 老店（午間套餐只有一種 $1500日幣 壽喜燒）', transportType: 'public', travelTime: '' },
+                    { id: 402, name: '雷門 & 淺草寺', category: 'sightseeing', startTime: '12:00', note: '老奶奶桃鈴、正殿左邊 「影向堂」 代購搶翻的大黑天御守、三麗鷗店', transportType: 'walk', travelTime: '' },
+					{ id: 403, name: 'FUGLEN TOKYO', category: 'food', startTime: '13:30', note: '北歐挪威冠軍咖啡', transportType: 'walk', travelTime: '' },
+					{ id: 404, name: 'Ginza brazil', category: 'food', startTime: '13:30', note: '起士吐司、豬排三明治', transportType: 'walk', travelTime: '' },
+                    { id: 405, name: '合羽橋道具街', category: 'shopping', startTime: '13:30', note: '洋菓子レモンパイ 檸檬派 （12點開店就來買）', transportType: 'walk', travelTime: '' },
+                    { id: 406, name: '錦糸町 阿卡將/百貨', category: 'shopping', startTime: '15:00', note: '頂樓拍晴空塔，備選：網敷天神社御旅所 （哥吉拉神社⛩️）只有週末下午有賣御守', transportType: 'walk', travelTime: '' },
+					{ id: 407, name: '漢堡王 錦糸町北口店', category: 'sightseeing', startTime: '15:00', note: '巨大晴空塔拍照點', transportType: 'walk', travelTime: '' },
+                    { id: 408, name: '根丸花式壽司🍣', category: 'food', startTime: '18:00', note: '晚餐', transportType: 'walk', travelTime: '' },
+                    { id: 409, name: '台場海濱公園', category: 'sightseeing', startTime: '19:00', note: '彩虹煙火(5分鐘)', transportType: 'public', travelTime: '' }
+                ],
+                4: [
+                    { id: 501, name: '人形町 unison taylor', category: 'food', startTime: '10:00', note: '早餐，超好吃法式吐司', transportType: 'public', travelTime: '' },
+					{ id: 502, name: '麻布台 teamLab', category: 'sightseeing', startTime: '11:30', note: '已預訂', transportType: 'public', travelTime: '' },
+					{ id: 503, name: '麻布台之丘 Hills Comme’n Tokyo', category: 'food', startTime: '11:30', note: '世界排名第一的麵包店🍞', transportType: 'public', travelTime: '' },
+                    { id: 504, name: '澀谷 Parco 極味屋', category: 'food', startTime: '15:30', note: 'B1 漢堡排', transportType: 'public', travelTime: '' },
+					{ id: 505, name: '澀谷 parco', category: 'shopping', startTime: '15:30', note: '可以稍微逛 jump shop 跟PUEBCO 、任天堂，澀谷 道玄坂通商場、Dondon donki 的情熱價格，澀谷 Kenyan紅茶 奶茶（冰、熱都好喝），斜對面 藍瓶咖啡（伴手禮），澀谷 Freak’s store，澀谷ナタ・デ・クリスチアノ 隱藏版蛋塔店 青之洞窟路上會經過 🍮', transportType: 'public', travelTime: '' },
+                    { id: 506, name: '明治神宮 & 原宿', category: 'sightseeing', startTime: '17:00', note: 'Kiddy Land, 貓街 （經過KIDDY LAND 從巷子進去）可以逛到澀谷，「笑たこ 原宿表参道店」笑臉章魚燒 散步美食', transportType: 'walk', travelTime: '' },
+                    { id: 507, name: '表參道', category: 'shopping', startTime: '19:00', note: '表參道gelato pique cafe bio concept 可麗餅店，Graniph tokyo 原創IP限量服飾品牌，（二樓有麻布十番來的甜甜圈可以休息），シアタープロダクツ 女生包包，Flying tiger 生活雜貨', transportType: 'walk', travelTime: '' },
+					{ id: 508, name: '澀谷SKY 日落 🌟', category: 'sightseeing', startTime: '19:00', note: '待預定 預計訂19:00左右', transportType: 'walk', travelTime: '' },
+                    { id: 509, name: 'TsuruTonTan UDON NOODLE Brasserie 渋谷', category: 'food', startTime: '20:30', note: '澀谷晚餐，13樓 創意烏龍麵', transportType: 'walk', travelTime: '' }
+                ],
+                5: [],
+                6: [
+                   { id: 701, name: '築地市場', category: 'food', startTime: '09:00', note: 'Tonboya 蜻 烤鮪魚串、丸豐飯糰、Matcha stand Maruni Tokyo（抹茶可以選濃度 ）、米本咖啡☕️（黑糖蜜咖啡）', transportType: 'public', travelTime: '' },
+                   { id: 702, name: '銀座 金魚展 (預約)', category: 'sightseeing', startTime: '13:30', note: '已預訂、三越百貨頂樓 地藏尊', transportType: 'public', travelTime: '' },
+                   { id: 703, name: '銀座 山笑 壽喜燒', category: 'food', startTime: '14:30', note: '有點小貴 適合吃午間套餐', transportType: 'walk', travelTime: '' },
+                   { id: 704, name: '銀座逛街 / 秋葉原', category: 'shopping', startTime: '16:00', note: '1.bic camera 2.三越、松屋 （傳統名店）3.銀座 loft （雜貨天堂）4.OIOI、Lumine （日系平價百貨）5.Tokyu Plaza （設計感外觀）6.ltoya （12層文具聖地）7.鳩居堂 （百年和紙文具）8.Sanrioworld + TOY PARK 卡通IP、秋葉元車站牛奶🥛、秋葉原 收音機會館', transportType: 'public', travelTime: '' },
+                   { id: 705, name: '神田神社', category: 'sightseeing', startTime: '18:00', note: 'IT御守、生意興隆', transportType: 'walk', travelTime: '' },
+                   { id: 706, name: '秋葉原 牛排一二三', category: 'food', startTime: '19:30', note: '晚餐', transportType: 'walk', travelTime: '' },
+				   { id: 707, name: '東京鐵塔', category: 'sightseeing', startTime: '18:00', note: '東京鐵塔夜景🎑', transportType: 'walk', travelTime: '' }
+                ],
+                7: [
+                   { id: 801, name: '哈利波特影城 (預約)', category: 'sightseeing', startTime: '13:00', note: '哈利波特園區 9:30開園 買10:00的票 提早9:30到買周邊 預計花費 4小時，門票🎫 成人 6300日幣  🧹交通方式 東京練馬城址公園（原本的豐島園）新宿沢 ➡️ 地鐵 ➡️ 大江戶線 ➡️ 豐島園沢  ⚠️記得先上廁所 廁所在很裡面', transportType: 'public', travelTime: '' },
+                   { id: 802, name: '跨年蕎麥麵', category: 'food', startTime: '20:00', note: '待定', transportType: 'public', travelTime: '' }
+                ],
+                8: [
+                   { id: 901, name: '澀谷 田園都市線 》三軒茶屋', category: 'sightseeing', startTime: '10:00', note: '三軒茶屋大猩猩 https://maps.app.goo.gl/AqHSUUr1hENXQSn3A?g_st=ipc 、特色麵包店 復古玩具 https://maps.app.goo.gl/xd9NanuWdPbqRoXA9?g_st=ipc 、甜甜圈、漢堡、哈密瓜蘇打，轉搭路面電車🚋（世田谷線） 〉 宮の坂駅 有機會搭到招財貓電車 招財貓列車時刻表 運行時刻表（幸福の招き猫電車）｜東急・東急電鉄公式サイト', transportType: 'public', travelTime: '' }
+                ],
+                9: [
+                   { id: 1001, name: '池袋百貨', category: 'shopping', startTime: '11:00', note: '逛街', transportType: 'public', travelTime: '' },
+                   { id: 1002, name: '多摩川淺間神社⛩️', category: 'sightseeing', startTime: '15:00', note: '哥吉拉神社', transportType: 'public', travelTime: '' }
+                ],
+                10: [
+                   { id: 1101, name: '退房 / 早餐', category: 'accommodation', startTime: '09:00', note: '相鐵飯店退房', transportType: 'walk', travelTime: '0' },
+                   { id: 1102, name: '前往成田機場', category: 'transport', startTime: '10:30', note: '預計搭乘 N\'EX 或巴士', transportType: 'public', travelTime: '1h 20m' },
+                   { id: 1103, name: 'NRT 成田機場', category: 'flight', startTime: '14:35', note: 'CI0101 -> TPE', transportType: 'flight', travelTime: '0' }
+                ]
+            };
+            
+            // 更新：預設購物清單 (符合圖片內容)
+            const defaultShoppingList = [
+                { id: 1, name: 'AFURI 阿夫利拉麵', note: '必點叉燒肉飯', checked: false },
+                { id: 2, name: 'Harbs 蛋糕', note: '高田馬場站 Cafe in the house 提拉米蘇、布丁', checked: false },
+                { id: 3, name: '東京牛奶起司工房', note: '機場必買', checked: false },
+                { id: 4, name: 'IT情報安全御守', note: '神田神社', checked: false }
+            ];
+
+            const itineraryData = ref(defaultItinerary);
+            const shoppingList = ref(defaultShoppingList);
+            const expenses = ref([
+                { name: '機票', category: 'transport', amount: 19236, date: '2025-08-06', payment: '信用卡' }
+            ]);
+
+            // 定義 LocalStorage 的 Key
+            const STORAGE_KEYS = {
+                ITINERARY: 'tokyo_trip_itinerary',
+                SHOPPING: 'tokyo_trip_shopping_list_v2', // 改名避免舊資料衝突
+                EXPENSES: 'tokyo_trip_expenses'
+            };
+
+            // onMounted
+            onMounted(() => {
+                const savedItinerary = localStorage.getItem(STORAGE_KEYS.ITINERARY);
+                if (savedItinerary) itineraryData.value = JSON.parse(savedItinerary);
+                else itineraryData.value = defaultItinerary;
+
+                const savedShopping = localStorage.getItem(STORAGE_KEYS.SHOPPING);
+                if (savedShopping) shoppingList.value = JSON.parse(savedShopping);
+
+                const savedExpenses = localStorage.getItem(STORAGE_KEYS.EXPENSES);
+                if (savedExpenses) expenses.value = JSON.parse(savedExpenses);
+            });
+
+            // Watchers
+            watch(itineraryData, (newVal) => localStorage.setItem(STORAGE_KEYS.ITINERARY, JSON.stringify(newVal)), { deep: true });
+            watch(shoppingList, (newVal) => localStorage.setItem(STORAGE_KEYS.SHOPPING, JSON.stringify(newVal)), { deep: true });
+            watch(expenses, (newVal) => localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(newVal)), { deep: true });
+
+            const currentItinerary = computed(() => {
+                if(!itineraryData.value[selectedDateIndex.value]) return [];
+                return itineraryData.value[selectedDateIndex.value];
+            });
+
+            // 新增：計算未購買數量
+            const unpurchasedCount = computed(() => {
+                return shoppingList.value.filter(item => !item.checked).length;
+            });
+
+            const weatherData = computed(() => {
+                const isSnow = selectedDateIndex.value % 3 === 0; 
+                return {
+                    icon: isSnow ? 'fa-regular fa-snowflake' : 'fa-regular fa-sun',
+                    temp: isSnow ? '2' : '8',
+                    feel: isSnow ? '-1' : '5'
+                }
+            });
+
+            const currencyInput = ref(1000);
+            const currencyResult = ref(200);
+            const calculateCurrency = () => {
+                currencyResult.value = Math.round(currencyInput.value * 0.20);
+            };
+
+            const showItineraryModal = ref(false);
+            const showShoppingModal = ref(false);
+            const showExpenseModal = ref(false);
+            const isEditMode = ref(false);
+            const formItinerary = ref({});
+            // 更新：購物表單
+            const newShoppingItem = ref({ name: '', note: '' });
+            const newExpense = ref({ category: 'food', payment: '現金', date: '2025-12-24' });
+
+            const getCategoryColor = (cat) => {
+                const map = {
+                    sightseeing: 'bg-red-400', food: 'bg-orange-400', shopping: 'bg-blue-400',
+                    accommodation: 'bg-indigo-500', transport: 'bg-slate-500', flight: 'bg-sky-500', other: 'bg-gray-400'
+                };
+                return map[cat] || 'bg-gray-400';
+            };
+            const getCategoryIcon = (cat) => {
+                const map = {
+                    sightseeing: 'fa-solid fa-camera', food: 'fa-solid fa-utensils', shopping: 'fa-solid fa-bag-shopping',
+                    accommodation: 'fa-solid fa-bed', transport: 'fa-solid fa-train', flight: 'fa-solid fa-plane', other: 'fa-solid fa-star'
+                };
+                return map[cat] || 'fa-solid fa-star';
+            };
+            const getTransportIcon = (type) => {
+                return type === 'car' ? 'fa-solid fa-car' : (type === 'walk' ? 'fa-solid fa-person-walking' : 'fa-solid fa-train-subway');
+            };
+
+            const openMap = (query) => {
+                window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`, '_blank');
+            };
+
+            const openAddModal = () => {
+                isEditMode.value = false;
+                formItinerary.value = { category: 'sightseeing', transportType: 'walk', travelTime: '15 min' };
+                showItineraryModal.value = true;
+            };
+
+            const editItem = (item) => {
+                isEditMode.value = true;
+                formItinerary.value = { ...item };
+                showItineraryModal.value = true;
+            };
+
+            const saveItinerary = () => {
+                const list = itineraryData.value[selectedDateIndex.value] || [];
+                if (isEditMode.value) {
+                    const idx = list.findIndex(i => i.id === formItinerary.value.id);
+                    if (idx !== -1) list[idx] = { ...formItinerary.value };
+                } else {
+                    if (!itineraryData.value[selectedDateIndex.value]) itineraryData.value[selectedDateIndex.value] = [];
+                    itineraryData.value[selectedDateIndex.value].push({ ...formItinerary.value, id: Date.now() });
+                }
+                showItineraryModal.value = false;
+            };
+
+            const deleteItineraryItem = () => {
+                if(confirm('確定要刪除此行程嗎？')) {
+                    const list = itineraryData.value[selectedDateIndex.value];
+                    const idx = list.findIndex(i => i.id === formItinerary.value.id);
+                    if (idx !== -1) list.splice(idx, 1);
+                    showItineraryModal.value = false;
+                }
+            };
+
+            const moveItem = (index, direction) => {
+                const list = itineraryData.value[selectedDateIndex.value];
+                const temp = list[index];
+                list[index] = list[index + direction];
+                list[index + direction] = temp;
+            };
+
+            // 更新：新增購物項目邏輯
+            const addShoppingItem = () => {
+                if(!newShoppingItem.value.name) return;
+                shoppingList.value.push({ 
+                    id: Date.now(),
+                    name: newShoppingItem.value.name,
+                    note: newShoppingItem.value.note,
+                    checked: false
+                });
+                newShoppingItem.value = { name: '', note: '' };
+                showShoppingModal.value = false;
+            };
+            
+            const removeShoppingItem = (idx) => {
+                if(confirm('確定刪除此購物項目？')) {
+                    shoppingList.value.splice(idx, 1);
+                }
+            };
+
+            const addExpense = () => {
+                if(!newExpense.value.amount) return;
+                expenses.value.unshift({ ...newExpense.value });
+                showExpenseModal.value = false;
+                newExpense.value = { category: 'food', payment: '現金', date: '2025-12-24', name: '' };
+            };
+            const removeExpense = (idx) => {
+                if(confirm('確定刪除？')) expenses.value.splice(idx, 1);
+            };
+            const totalExpenses = computed(() => expenses.value.reduce((sum, item) => sum + item.amount, 0));
+            const formatNumber = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+            return {
+                currentTab, dates, selectedDateIndex, weatherData,
+                itineraryData, currentItinerary, shoppingList, expenses,
+                currencyInput, currencyResult, calculateCurrency,
+                showItineraryModal, showShoppingModal, showExpenseModal, isEditMode,
+                formItinerary, newShoppingItem, newExpense, unpurchasedCount,
+                getCategoryColor, getCategoryIcon, getTransportIcon,
+                openMap, openAddModal, editItem, saveItinerary, deleteItineraryItem, moveItem,
+                addShoppingItem, removeShoppingItem,
+                addExpense, removeExpense, totalExpenses, formatNumber
+            }
+        }
+    }).mount('#app')
+</script>
+</body>
+</html>
